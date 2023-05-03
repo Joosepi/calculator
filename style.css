@@ -41,16 +41,9 @@ body {
   span {
     font-weight: bold;
   }
+
   
-  /* Colors for the chart */
-  :root {
-    --primary-color: #0074D9;
-    --secondary-color: #FF4136;
-    --tertiary-color: #2ECC40;
-    --quaternary-color: #FFDC00;
-  }
-  
-  /* Styles for the chart */
+
   .chart-container canvas {
     height: 400px;
     width: 100%;
@@ -58,7 +51,7 @@ body {
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
   }
   
-  /* Styles for the legend */
+
   .chart-legend {
     display: flex;
     justify-content: center;
