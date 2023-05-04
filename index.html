@@ -1,26 +1,173 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Time Spent on Activities</title>
+    <meta charset="UTF-8">
+    <title>Time Tracker</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <style>
+
+      
+      label {
+        display: inline-block;
+        width: 100px;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-family: Arial, sans-serif;
+      }
+      
+      input[type="number"] {
+        border: 2px solid black;
+        padding: 5px;
+        font-size: 18px;
+        font-weight: bold;
+        font-family: Arial, sans-serif;
+      }
+      
+      button {
+        background-color: black;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        margin-top: 10px;
+        font-family: Arial, sans-serif;
+      }
+      
+      canvas {
+        margin-top: 20px;
+      }
+    </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Time Spent on Activities</h1>
-      <div class="chart-container">
-        <canvas id="myChart"></canvas>
-      </div>
-      <div class="total-time">
-        <p>Total Time:</p>
-        <ul>
-          <li>Sleep: <span id="sleep-time"></span> hours</li>
-          <li>Game: <span id="game-time"></span> hours</li>
-          <li>Study: <span id="study-time"></span> hours</li>
-          <li>Relax: <span id="relax-time"></span> hours</li>
-        </ul>
-      </div>
-    </div>
-    <script src="script.js"></script>
-  </body>
+    <h1>Time Tracker</h1>
+    <label for="study-time">Study Time:</label>
+    <input type="number" id="study-time" value="0" min="0">
+    <br>
+    <label for="game-time">Game Time:</label>
+    <input type="number" id="game-time" value="0" min="0">
+    <br>
+    <label for="sleep-time">Sleep Time:</label>
+    <input type="number" id="sleep-time" value="0" min="0">
+    <br>
+    <label for="relax-time">Relax Time:</label>
+    <input type="number" id="relax-time" value="0" min="0">
+    <br>
+    <label for="gym-time">Gym Time:</label>
+    <input type="number" id="gym-time" value="0" min="0">
+    <br>
+    <button onclick="calculateTotal()">Calculate Total</button>
+    <br>
+    <p>Total Time: <span id="total-time">0:00:00</span></p>
+    <canvas id="myChart"></canvas>
+
+    <script>
+      const studyTimeInput = document.getElementById("study-time");
+      const gameTimeInput = document.getElementById("game-time");
+      const sleepTimeInput = document.getElementById("sleep-time");
+      const relaxTimeInput = document.getElementById("relax-time");
+      const gymTimeInput = document.getElementById("gym-time");
+      const totalTimeDisplay = document.getElementById("total-time");
+
+      let studyTime = 0;
+      let gameTime = 0;
+      let sleepTime = 0;
+      let relaxTime = 0;
+      let gymTime = 0;
+
+      function calculateTotal() {
+        studyTime = Number(studyTimeInput.value);
+        gameTime = Number(gameTimeInput.value);
+        sleepTime = Number(sleepTimeInput.value);
+        relaxTime = Number(relaxTimeInput.value);
+        gymTime = Number(gymTimeInput.value);
+
+        const totalSeconds = studyTime + gameTime + sleepTime + relaxTime + gymTime;
+
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+    const formattedTime = `${hours}:${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+    totalTimeDisplay.textContent = formattedTime;
+
+    updateChart();
+  }
+
+  function updateChart() {
+    const labels = ["Study", "Game", "Sleep", "Relax", "Gym"];
+    const data = [studyTime, gameTime, sleepTime, relaxTime, gymTime];
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Time Spent (in hours)',
+          data: data,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value + "h";
+              },
+            },
+          },
+          x: {
+            ticks: {
+              font: {
+                size: 16,
+              },
+              color: "black",
+            },
+            grid: {
+              color: "gray",
+            },
+          },
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: "Time Tracker",
+            font: {
+              size: 24,
+              weight: "bold",
+            },
+          },
+          legend: {
+            labels: {
+              font: {
+                size: 16,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    myChart.update();
+  }
+</script>
+</body>
 </html>
